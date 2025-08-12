@@ -1,0 +1,30 @@
+import './Sidebar.css';
+import { Link } from 'react-router-dom';
+import { FaCog, FaUser, FaBell } from 'react-icons/fa';
+
+function Sidebar() {
+  return (
+    <aside className="sidebar">
+      <div className="sidebar-logo">
+        <img src="https://i.imgur.com/0y0y0y0.png" alt="Inspirart Logo" />
+        <span>Inspirart</span>
+      </div>
+      <nav className="sidebar-nav">
+        <Link to="/musicas"><span role="img" aria-label="músicas">🎵</span> músicas</Link>
+        <Link to="/filmes"><span role="img" aria-label="filmes">🎬</span> filmes</Link>
+        <Link to="/artes-digitais"><span role="img" aria-label="artes digitais">🖼️</span> artes digitais</Link>
+        <Link to="/explorar"><span role="img" aria-label="explorar">🔍</span> explorar</Link>
+        <Link to="/obras"><span role="img" aria-label="obras">📚</span> obras</Link>
+        <Link to="/comunidade"><span role="img" aria-label="comunidade">👥</span> comunidade</Link>
+        <Link to="/publicar"><span role="img" aria-label="publicar">➕</span> publicar</Link>
+      </nav>
+      <div className="sidebar-footer">
+        <Link to="/configuracoes"><FaCog aria-label="configurações" /></Link>
+        <Link to="/perfil"><FaUser aria-label="perfil" /></Link>
+        <Link to="/notificacoes"><FaBell aria-label="notificações" /></Link>
+      </div>
+    </aside>
+  );
+}
+
+export default Sidebar; 

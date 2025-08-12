@@ -1,0 +1,49 @@
+.trending-section {
+  border-radius: 16px;
+  padding: 20px 24px 18px 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07);
+}
+
+.trending-title {
+  color: #000;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.trending-carousel {
+  display: flex;
+  align-items: center;
+}
+
+.trending-list-viewport {
+  overflow: hidden;
+  width: calc(6 * 250px + 5 * 18px); /* 6 cards por vez, ajuste se cardsPerPage mudar */
+  border-radius: 12px;
+}
+
+.trending-list {
+  display: flex;
+  gap: 18px;
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+}
+
+.carousel-arrow {
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 1.5rem;
+  color: #23272f;
+  cursor: pointer;
+  margin: 0 10px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+.carousel-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+} 
