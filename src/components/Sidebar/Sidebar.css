@@ -52,6 +52,42 @@
   background: #00ff66;
   color: #181a20;
 }
+
+/* Hovers específicos por categoria */
+.sidebar-nav a[href="/filmes"]:hover {
+  background: #dc2626 !important;
+  color: #fff !important;
+}
+
+.sidebar-nav a[href="/artes-digitais"]:hover {
+  background: #7c3aed !important;
+  color: #fff !important;
+}
+
+.sidebar-nav a[href="/fotografias"]:hover {
+  background: #1d4ed8 !important;
+  color: #fff !important;
+}
+
+.sidebar-nav a[href="/obras"]:hover {
+  background: #ea580c !important;
+  color: #fff !important;
+}
+
+.sidebar-nav a[href="/explorar"]:hover {
+  background: #7c3aed !important;
+  color: #fff !important;
+}
+
+.sidebar-nav a[href="/comunidade"]:hover {
+  background: #7c3aed !important;
+  color: #fff !important;
+}
+
+.sidebar-nav a[href="/publicar"]:hover {
+  background: #7c3aed !important;
+  color: #fff !important;
+}
 .sidebar-nav a span[role="img"] {
   font-size: 1.3rem;
   filter: drop-shadow(0 0 2px #fff);
