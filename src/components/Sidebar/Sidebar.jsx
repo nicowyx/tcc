@@ -7,7 +7,7 @@ function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-logo">
         <img src="https://i.imgur.com/0y0y0y0.png" alt="Inspirart Logo" />
-        <span>Inspirart</span>
+        <Link to="/home"><span>Inspirart</span></Link>
       </div>
       <nav className="sidebar-nav">
         <Link to="/musicas"><span role="img" aria-label="músicas">🎵</span> músicas</Link>
