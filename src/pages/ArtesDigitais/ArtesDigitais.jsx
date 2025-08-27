@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TrendingSection from '../../components/TrendingSection/TrendingSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import './ArtesDigitais.css';
 
 function ArtesDigitais() {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const categories = ['Ilustração Digital', '3D & Modelagem', 'Arte Conceitual & Design'];
+
   return (
     <div className="artes-layout">
       <Sidebar />
@@ -11,7 +16,16 @@ function ArtesDigitais() {
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
           <SearchBar />
         </div>
-        <h2 className="artes-title">Suas Artes Digitais</h2>
+        <h2 className="artes-title">Desenhos Digitais</h2>
+        <CategoryFilter 
+          categories={categories} 
+          onCategoryChange={setSelectedCategory}
+          categoryColors={{
+            'Ilustração Digital': '#8b5cf6',
+            '3D & Modelagem': '#8b5cf6',
+            'Arte Conceitual & Design': '#8b5cf6'
+          }}
+        />
 
         <TrendingSection
           title="Ilustração Digital"

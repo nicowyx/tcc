@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TrendingSection from '../../components/TrendingSection/TrendingSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import './Filmes.css';
 
 function Filmes() {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const categories = ['Ação & Aventura', 'Terror & Suspense', 'Drama & Romance'];
+
   return (
     <div className="filmes-layout">
       <Sidebar />
@@ -11,7 +16,16 @@ function Filmes() {
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
           <SearchBar />
         </div>
-        <h2 className="filmes-title">Seus Filmes</h2>
+        <h2 className="filmes-title">Longas e Curta-metragens Diversas</h2>
+        <CategoryFilter 
+          categories={categories} 
+          onCategoryChange={setSelectedCategory}
+          categoryColors={{
+            'Ação & Aventura': '#ff3c3c',
+            'Terror & Suspense': '#ff3c3c',
+            'Drama & Romance': '#ff3c3c'
+          }}
+        />
 
         <TrendingSection
           title="Ação & Aventura"

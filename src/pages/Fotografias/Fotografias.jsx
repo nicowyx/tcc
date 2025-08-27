@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TrendingSection from '../../components/TrendingSection/TrendingSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import './Fotografias.css';
 
 function Fotografias() {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const categories = ['Paisagens & Natureza', 'Retratos & Pessoas', 'Arquitetura & Urbano'];
+
   return (
     <div className="fotografias-layout">
       <Sidebar />
@@ -11,7 +16,16 @@ function Fotografias() {
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
           <SearchBar />
         </div>
-        <h2 className="fotografias-title">Suas Fotografias</h2>
+        <h2 className="fotografias-title">Fotografias Diversas</h2>
+        <CategoryFilter 
+          categories={categories} 
+          onCategoryChange={setSelectedCategory}
+          categoryColors={{
+            'Paisagens & Natureza': '#1d4ed8',
+            'Retratos & Pessoas': '#1d4ed8',
+            'Arquitetura & Urbano': '#1d4ed8'
+          }}
+        />
 
         <TrendingSection
           title="Paisagens & Natureza"

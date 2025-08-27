@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TrendingSection from '../../components/TrendingSection/TrendingSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import './Musicas.css';
 
 function Musicas() {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const categories = ['Top Hits', 'Rock Clássico', 'Pop Nacional'];
+
   return (
     <div className="musicas-layout">
       <Sidebar />
@@ -11,7 +16,16 @@ function Musicas() {
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
           <SearchBar />
         </div>
-        <h2 className="musicas-title">Suas Músicas</h2>
+        <h2 className="musicas-title"> Músicas Diversas</h2>
+        <CategoryFilter 
+          categories={categories} 
+          onCategoryChange={setSelectedCategory}
+          categoryColors={{
+            'Top Hits': '#16a34a',
+            'Rock Clássico': '#16a34a',
+            'Pop Nacional': '#16a34a'
+          }}
+        />
 
         <TrendingSection
           title="Top Hits"

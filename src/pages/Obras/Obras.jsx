@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TrendingSection from '../../components/TrendingSection/TrendingSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
 import './Obras.css';
 
 function Obras() {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const categories = ['Pinturas Clássicas', 'Arte Contemporânea', 'Esculturas & Instalações'];
+
   return (
     <div className="obras-layout">
       <Sidebar />
@@ -11,11 +16,20 @@ function Obras() {
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
           <SearchBar />
         </div>
-        <h2 className="obras-title">Suas Obras</h2>
+        <h2 className="obras-title">Obras Diversas</h2>
+        <CategoryFilter 
+          categories={categories} 
+          onCategoryChange={setSelectedCategory}
+          categoryColors={{
+            'Pinturas Clássicas': '#f97316',
+            'Arte Contemporânea': '#f97316',
+            'Esculturas & Instalações': '#f97316'
+          }}
+        />
 
         <TrendingSection
           title="Pinturas Clássicas"
-          color="linear-gradient(0deg, #ea580c 0%, #dc2626 100%)"
+          color="linear-gradient(0deg, #f97316 0%, #ea580c 100%)"
           artworks={[
             { title: 'Mona Lisa', artist: 'Leonardo da Vinci', cover: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=400&q=80' },
             { title: 'A Noite Estrelada', artist: 'Vincent van Gogh', cover: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=400&q=80' },
@@ -43,7 +57,7 @@ function Obras() {
 
         <TrendingSection
           title="Esculturas & Instalações"
-          color="linear-gradient(0deg, #fb923c 0%, #f97316 100%)"
+          color="linear-gradient(0deg, #f97316 0%, #ea580c 100%)"
           artworks={[
             { title: 'O Pensador', artist: 'Auguste Rodin', cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=400&q=80' },
             { title: 'David', artist: 'Michelangelo', cover: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=400&q=80' },
