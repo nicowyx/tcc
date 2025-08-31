@@ -6,12 +6,26 @@ const Publicar = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
+  const [genre, setGenre] = useState('');
   const [file, setFile] = useState(null);
+
+  const genresByCategory = {
+    'musicas': ['Rap', 'Pop', 'Rock', 'Eletrônica', 'MPB', 'Sertanejo', 'Funk', 'Jazz'],
+    'filmes': ['Ação', 'Drama', 'Comédia', 'Terror', 'Ficção Científica', 'Romance', 'Documentário', 'Animação'],
+    'artes-digitais': ['Ilustração', '3D', 'Pixel Art', 'Concept Art', 'Character Design', 'Matte Painting', 'Digital Painting'],
+    'fotografias': ['Retrato', 'Paisagem', 'Street', 'Macro', 'Arquitetura', 'Natureza', 'Fashion', 'Documental'],
+    'obras': ['Pintura', 'Escultura', 'Gravura', 'Cerâmica', 'Instalação', 'Performance', 'Arte Conceitual', 'Mixed Media']
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ title, description, category, file });
+    console.log({ title, description, category, genre, file });
     // Aqui você faria o upload para o servidor
+  };
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    setGenre(''); // Reset genre when category changes
   };
 
   return (
@@ -36,7 +50,7 @@ const Publicar = () => {
             <label>Categoria</label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={handleCategoryChange}
               required
             >
               <option value="">Selecione uma categoria</option>
@@ -47,6 +61,24 @@ const Publicar = () => {
               <option value="obras">Obra de Arte</option>
             </select>
           </div>
+
+          {category && (
+            <div className="form-group">
+              <label>Gênero</label>
+              <select
+                value={genre}
+                onChange={(e) => setGenre(e.target.value)}
+                required
+              >
+                <option value="">Selecione um gênero</option>
+                {genresByCategory[category]?.map((genreOption) => (
+                  <option key={genreOption} value={genreOption}>
+                    {genreOption}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="form-group">
             <label>Arquivo</label>

@@ -20,3 +20,8 @@
   margin-bottom: 24px;
   margin-top: 8px;
 }
+
+.fotografias-layout .category-btn.active:first-child {
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+}
