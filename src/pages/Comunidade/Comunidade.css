@@ -1,153 +1,21 @@
-.comunidade-container {
+.comunidade-layout {
   display: flex;
-  height: 100vh;
-}
-
-.comunidade-content {
-  display: flex;
-  flex: 1;
-  background: #1a1a1a;
-}
-
-.chat-sidebar {
-  width: 300px;
-  background: #2d2d2d;
-  border-right: 1px solid #444;
-  padding: 20px;
-}
-
-.chat-sidebar h3 {
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.chat-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: background 0.2s;
-}
-
-.chat-item:hover {
-  background: #3d3d3d;
-}
-
-.chat-item.active {
-  background: #7246d8;
-  color: white;
-}
-
-.chat-info h4 {
-  margin: 0 0 5px 0;
-  font-size: 16px;
-  color: #fff;
-}
-
-.chat-info p {
-  margin: 0;
-  font-size: 14px;
-  color: #ccc;
-}
-
-.chat-item.active .chat-info p {
-  color: #ccc;
-}
-
-.chat-time {
-  font-size: 12px;
-  color: #aaa;
-}
-
-.chat-item.active .chat-time {
-  color: #ccc;
-}
-
-.chat-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-header {
-  background: #2d2d2d;
-  padding: 20px;
-  border-bottom: 1px solid #444;
-}
-
-.chat-header h3 {
-  margin: 0;
-  color: #fff;
-}
-
-.chat-messages {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background: #1a1a1a;
-}
-
-.message {
-  background: #2d2d2d;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.message strong {
-  color: #744bd4;
-  display: block;
-  margin-bottom: 5px;
-}
-
-.message p {
-  margin: 0 0 5px 0;
-  color: #fff;
-}
-
-.message-time {
-  font-size: 12px;
-  color: #aaa;
-}
-
-.chat-input {
-  display: flex;
-  padding: 20px;
-  background: #2d2d2d;
-  border-top: 1px solid #444;
-}
-
-.chat-input input {
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #444;
-  border-radius: 6px;
-  margin-right: 10px;
-  background: #1a1a1a;
-  color: #fff;
-}
-
-.chat-input button {
-  padding: 12px 24px;
-  background: #8b5cf6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.chat-input button:hover {
+  min-height: 100vh;
   background: #7c3aed;
 }
 
-.no-chat {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #ccc;
-  background: #1a1a1a;
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 100vw;
+  padding: 24px;
+  background: linear-gradient(180deg, #23272f 60%, #7c3aed 100%);
+  overflow-y: auto;
+}
+
+.comunidade-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 24px;
 }

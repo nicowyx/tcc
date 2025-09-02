@@ -7,6 +7,7 @@ import './Musicas.css';
 
 function Musicas() {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const categories = ['Top Hits', 'Rock Clássico', 'Pop Nacional'];
 
   const musicSections = {
@@ -52,10 +53,24 @@ function Musicas() {
   };
 
   const getSectionsToShow = () => {
+    let sections;
     if (selectedCategory === 'all') {
-      return Object.values(musicSections);
+      sections = Object.values(musicSections);
+    } else {
+      sections = [musicSections[selectedCategory]];
     }
-    return [musicSections[selectedCategory]];
+    
+    if (searchTerm) {
+      sections = sections.map(section => ({
+        ...section,
+        artworks: section.artworks.filter(artwork => 
+          artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          artwork.artist.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      })).filter(section => section.artworks.length > 0);
+    }
+    
+    return sections;
   };
 
   return (
@@ -63,7 +78,7 @@ function Musicas() {
       <Sidebar />
       <main className="main-content">
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
-          <SearchBar />
+          <SearchBar onSearch={setSearchTerm} placeholder="Buscar músicas, artistas..." />
         </div>
         <h2 className="musicas-title"> Músicas Diversas</h2>
         <CategoryFilter 

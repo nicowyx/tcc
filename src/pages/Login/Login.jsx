@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import '../Login/Login.css';
-import { FaGooglePlusG, FaFacebookF, FaGithub, FaLinkedinIn } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-
 
 function Login() {
   const [isActive, setIsActive] = useState(false);
@@ -14,10 +12,10 @@ function Login() {
           <form>
             <h1>Crie sua Conta</h1>
             <div className="social-icons">
-              <a href="#" className="icon"><FaGooglePlusG /></a>
-              <a href="#" className="icon"><FaFacebookF /></a>
-              <a href="#" className="icon"><FaGithub /></a>
-              <a href="#" className="icon"><FaLinkedinIn /></a>
+              <a href="#" className="icon">G</a>
+              <a href="#" className="icon">F</a>
+              <a href="#" className="icon">Git</a>
+              <a href="#" className="icon">In</a>
             </div>
             <span>ou use seu e-mail para se registrar</span>
             <input type="text" placeholder="Nome" />
@@ -31,10 +29,10 @@ function Login() {
           <form>
             <h1>Entre</h1>
             <div className="social-icons">
-              <a href="#" className="icon"><FaGooglePlusG /></a>
-              <a href="#" className="icon"><FaFacebookF /></a>
-              <a href="#" className="icon"><FaGithub /></a>
-              <a href="#" className="icon"><FaLinkedinIn /></a>
+              <a href="#" className="icon">G</a>
+              <a href="#" className="icon">F</a>
+              <a href="#" className="icon">Git</a>
+              <a href="#" className="icon">In</a>
             </div>
             <span>ou use seu e-mail e senha</span>
             <input type="email" placeholder="Email" />

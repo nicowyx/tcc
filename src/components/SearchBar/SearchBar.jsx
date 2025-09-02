@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaSearch } from 'react-icons/fa';
 import './SearchBar.css';
 
-function SearchBar() {
+function SearchBar({ onSearch, placeholder = "Buscar..." }) {
   const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -12,19 +12,38 @@ function SearchBar() {
     }
   }, [open]);
 
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (onSearch) {
+      onSearch(value);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(searchTerm);
+    }
+  };
+
   return (
     <div className={`search-bar${open ? ' open' : ''}`}> 
       <button className="search-icon" onClick={() => setOpen((v) => !v)}>
-        <FaSearch />
+        🔍
       </button>
       {open && (
-        <input
-          ref={inputRef}
-          type="text"
-          className="search-input"
-          placeholder="Buscar por gêneros..."
-          onBlur={() => setOpen(false)}
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            ref={inputRef}
+            type="text"
+            className="search-input"
+            placeholder={placeholder}
+            value={searchTerm}
+            onChange={handleInputChange}
+            onBlur={() => setTimeout(() => setOpen(false), 200)}
+          />
+        </form>
       )}
     </div>
   );

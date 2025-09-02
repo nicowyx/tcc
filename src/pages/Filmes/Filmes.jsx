@@ -7,6 +7,7 @@ import './Filmes.css';
 
 function Filmes() {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const categories = ['Ação & Aventura', 'Terror & Suspense', 'Drama & Romance'];
 
   const filmeSections = {
@@ -52,10 +53,24 @@ function Filmes() {
   };
 
   const getSectionsToShow = () => {
+    let sections;
     if (selectedCategory === 'all') {
-      return Object.values(filmeSections);
+      sections = Object.values(filmeSections);
+    } else {
+      sections = [filmeSections[selectedCategory]];
     }
-    return [filmeSections[selectedCategory]];
+    
+    if (searchTerm) {
+      sections = sections.map(section => ({
+        ...section,
+        artworks: section.artworks.filter(artwork => 
+          artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          artwork.artist.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      })).filter(section => section.artworks.length > 0);
+    }
+    
+    return sections;
   };
 
   return (
@@ -63,7 +78,7 @@ function Filmes() {
       <Sidebar />
       <main className="main-content">
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
-          <SearchBar />
+          <SearchBar onSearch={setSearchTerm} placeholder="Buscar filmes, diretores..." />
         </div>
         <h2 className="filmes-title">Longas e Curta-metragens Diversas</h2>
         <CategoryFilter 
