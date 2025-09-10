@@ -78,7 +78,7 @@ function Musicas() {
       <Sidebar />
       <main className="main-content">
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
-          <SearchBar onSearch={setSearchTerm} placeholder="Buscar músicas, artistas..." />
+          <SearchBar />
         </div>
         <h2 className="musicas-title"> Músicas Diversas</h2>
         <CategoryFilter 
