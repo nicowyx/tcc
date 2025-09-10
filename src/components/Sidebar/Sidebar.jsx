@@ -1,5 +1,6 @@
 import './Sidebar.css';
 import { Link } from 'react-router-dom';
+import { FaCog, FaUser, FaBell } from 'react-icons/fa';
 
 function Sidebar() {
   return (
@@ -19,12 +20,12 @@ function Sidebar() {
         <Link to="/publicar"><span role="img" aria-label="publicar">➕</span> publicar</Link>
       </nav>
       <div className="sidebar-footer">
-        <Link to="/configuracoes">⚙️</Link>
-        <Link to="/perfil">👤</Link>
-        <Link to="/notificacoes">🔔</Link>
+        <Link to="/configuracoes"><FaCog aria-label="configurações" /></Link>
+        <Link to="/perfil"><FaUser aria-label="perfil" /></Link>
+        <Link to="/notificacoes"><FaBell aria-label="notificações" /></Link>
       </div>
     </aside>
   );
 }
 
-export default Sidebar; 
+export default Sidebar;

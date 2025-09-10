@@ -11,6 +11,9 @@ import Obras from './pages/Obras/Obras'
 import Explorar from './pages/Explorar/Explorar'
 import Comunidade from './pages/Comunidade/Comunidade'
 import Publicar from './pages/Publicar/Publicar'
+import Perfil from './pages/Perfil/Perfil'
+import Notificacoes from './pages/Notificacoes/Notificacoes'
+import Configuracoes from './pages/Configuracoes/Configuracoes'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -25,6 +28,9 @@ createRoot(document.getElementById('root')).render(
       <Route path="/explorar" element={<Explorar />}/>
       <Route path="/comunidade" element={<Comunidade />}/>
       <Route path="/publicar" element={<Publicar />}/>
+      <Route path="/perfil" element={<Perfil />}/>
+      <Route path="/notificacoes" element={<Notificacoes />}/>
+      <Route path="/configuracoes" element={<Configuracoes />}/>
       <Route path="/" element={<Login/>}/>
     </Routes>
     </BrowserRouter>
