@@ -7,7 +7,7 @@ function Configuracoes() {
     notifications: true,
     emailNotifications: false,
     pushNotifications: true,
-    darkMode: false,
+    darkMode: true,
     autoPlay: true,
     highQuality: true,
     language: 'pt',

@@ -108,7 +108,7 @@ function Comunidade() {
             <h2 className="page-title">🌟 Comunidade</h2>
             <p className="page-subtitle">Conecte-se com artistas e criadores</p>
           </div>
-          <div className="header-actions">
+          <div className="header-actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '16px' }}>
             <SearchBar />
             <button className="create-post-btn" onClick={() => setShowCreatePost(!showCreatePost)}>
               ✏️ Criar Post

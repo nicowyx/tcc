@@ -36,8 +36,7 @@ function Publicar() {
     { id: 'filmes', name: 'Filmes', icon: '🎬', description: 'Vídeos, curtas e documentários' },
     { id: 'artes-digitais', name: 'Artes Digitais', icon: '🎨', description: 'Ilustrações e designs digitais' },
     { id: 'fotografias', name: 'Fotografias', icon: '📸', description: 'Fotos e ensaios fotográficos' },
-    { id: 'obras', name: 'Obras', icon: '🖼️', description: 'Pinturas e obras físicas' },
-    { id: 'literatura', name: 'Literatura', icon: '📚', description: 'Textos, poemas e histórias' }
+    { id: 'obras', name: 'Obras', icon: '🖼️', description: 'Pinturas e obras físicas' }
   ];
 
   const genresByCategory = {
@@ -45,8 +44,7 @@ function Publicar() {
     'filmes': ['Drama', 'Comédia', 'Ação', 'Terror', 'Ficção Científica', 'Romance', 'Documentário', 'Animação', 'Thriller', 'Aventura'],
     'artes-digitais': ['Ilustração', 'Design Gráfico', '3D', 'Pixel Art', 'Concept Art', 'Digital Painting', 'Motion Graphics', 'UI/UX', 'Arte Vetorial', 'NFT'],
     'fotografias': ['Retrato', 'Paisagem', 'Street', 'Macro', 'Natureza', 'Arquitetura', 'Moda', 'Esporte', 'Documental', 'Fine Art'],
-    'obras': ['Pintura', 'Escultura', 'Desenho', 'Gravura', 'Aquarela', 'Óleo', 'Acrílica', 'Pastel', 'Carvão', 'Arte Abstrata'],
-    'literatura': ['Romance', 'Poesia', 'Crônica', 'Conto', 'Ensaio', 'Teatro', 'Ficção', 'Não-ficção', 'Biografia', 'Infantil']
+    'obras': ['Pintura', 'Escultura', 'Desenho', 'Gravura', 'Aquarela', 'Óleo', 'Acrílica', 'Pastel', 'Carvão', 'Arte Abstrata']
   };
 
   const handleInputChange = (e) => {
@@ -253,7 +251,7 @@ function Publicar() {
                     {categories.map(cat => (
                       <div key={cat.id}
                         className={`category-card ${formData.category === cat.id ? 'selected' : ''}`}
-                        onClick={() => setFormData(prev => ({ ...prev, category: cat.id, genre: '' }))}
+                        onClick={() => setFormData(prev => ({ ...prev, category: cat.id }))}
                       >
                         <div className="category-icon">{cat.icon}</div>
                         <h5>{cat.name}</h5>

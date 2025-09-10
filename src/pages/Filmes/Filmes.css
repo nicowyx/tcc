@@ -1,15 +1,12 @@
 .filmes-layout {
   display: flex;
   min-height: 100vh;
-  background: #7c3aed;
+  background: linear-gradient(180deg, #23272f 60%, #6a1b9a 100%);
 }
 
 .main-content {
-  flex: 1;
-  width: 100%;
-  max-width: 100vw;
-  padding: 24px 24px;
-  background: linear-gradient(180deg, #23272f 60%, #7c3aed 100%);
+  margin-left: 280px;
+  padding: 24px 40px 24px 40px;
   overflow-y: auto;
 }
 
