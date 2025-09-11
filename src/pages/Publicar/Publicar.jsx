@@ -28,6 +28,8 @@ function Publicar() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [currentTag, setCurrentTag] = useState('');
+  const [documentText, setDocumentText] = useState('');
+  const [customGenre, setCustomGenre] = useState('');
   const fileInputRef = useRef(null);
   const thumbnailInputRef = useRef(null);
 
@@ -36,15 +38,17 @@ function Publicar() {
     { id: 'filmes', name: 'Filmes', icon: '🎬', description: 'Vídeos, curtas e documentários' },
     { id: 'artes-digitais', name: 'Artes Digitais', icon: '🎨', description: 'Ilustrações e designs digitais' },
     { id: 'fotografias', name: 'Fotografias', icon: '📸', description: 'Fotos e ensaios fotográficos' },
-    { id: 'obras', name: 'Obras', icon: '🖼️', description: 'Pinturas e obras físicas' }
+    { id: 'obras', name: 'Obras', icon: '🖼️', description: 'Pinturas e obras físicas' },
+    { id: 'literatura', name: 'Literatura', icon: '📚', description: 'Textos, poesias e escritos' }
   ];
 
   const genresByCategory = {
-    'musicas': ['Rock', 'Pop', 'Jazz', 'Clássica', 'Eletrônica', 'Hip Hop', 'Reggae', 'Country', 'Blues', 'Folk'],
-    'filmes': ['Drama', 'Comédia', 'Ação', 'Terror', 'Ficção Científica', 'Romance', 'Documentário', 'Animação', 'Thriller', 'Aventura'],
-    'artes-digitais': ['Ilustração', 'Design Gráfico', '3D', 'Pixel Art', 'Concept Art', 'Digital Painting', 'Motion Graphics', 'UI/UX', 'Arte Vetorial', 'NFT'],
-    'fotografias': ['Retrato', 'Paisagem', 'Street', 'Macro', 'Natureza', 'Arquitetura', 'Moda', 'Esporte', 'Documental', 'Fine Art'],
-    'obras': ['Pintura', 'Escultura', 'Desenho', 'Gravura', 'Aquarela', 'Óleo', 'Acrílica', 'Pastel', 'Carvão', 'Arte Abstrata']
+    'musicas': ['Rock', 'Pop', 'Jazz', 'Clássica', 'Eletrônica', 'Hip Hop', 'Reggae', 'Country', 'Blues', 'Folk', 'Outros'],
+    'filmes': ['Drama', 'Comédia', 'Ação', 'Terror', 'Ficção Científica', 'Romance', 'Documentário', 'Animação', 'Thriller', 'Aventura', 'Outros'],
+    'artes-digitais': ['Ilustração', 'Design Gráfico', '3D', 'Pixel Art', 'Concept Art', 'Digital Painting', 'Motion Graphics', 'UI/UX', 'Arte Vetorial', 'NFT', 'Outros'],
+    'fotografias': ['Retrato', 'Paisagem', 'Street', 'Macro', 'Natureza', 'Arquitetura', 'Moda', 'Esporte', 'Documental', 'Fine Art', 'Outros'],
+    'obras': ['Pintura', 'Escultura', 'Desenho', 'Gravura', 'Aquarela', 'Óleo', 'Acrílica', 'Pastel', 'Carvão', 'Arte Abstrata', 'Outros'],
+    'literatura': ['Poesia', 'Contos', 'Crônicas', 'Ensaios', 'Romance', 'Novela', 'Teatro', 'Artigos', 'Biografia', 'Ficção', 'Outros']
   };
 
   const handleInputChange = (e) => {
@@ -81,8 +85,50 @@ function Publicar() {
     }
   };
 
+  const readTextFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setDocumentText(e.target.result);
+      if (!formData.title) {
+        const firstLine = e.target.result.split('\n')[0].substring(0, 50);
+        setFormData(prev => ({ ...prev, title: firstLine }));
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const readPdfFile = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const text = await extractTextFromPDF(arrayBuffer);
+      setDocumentText(text);
+      if (!formData.title) {
+        const firstLine = text.split('\n')[0].substring(0, 50);
+        setFormData(prev => ({ ...prev, title: firstLine }));
+      }
+    } catch (error) {
+      console.error('Erro ao ler PDF:', error);
+      alert('Erro ao processar o arquivo PDF');
+    }
+  };
+
+  const extractTextFromPDF = async (arrayBuffer) => {
+    // Simulação de extração de texto de PDF
+    // Em um projeto real, você usaria uma biblioteca como pdf-parse ou PDF.js
+    return "Texto extraído do PDF (simulação)";
+  };
+
   const handleFileUpload = (file) => {
     setFormData(prev => ({ ...prev, file }));
+    
+    // Se for categoria literatura e arquivo de texto/PDF, ler conteúdo
+    if (formData.category === 'literatura') {
+      if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+        readTextFile(file);
+      } else if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+        readPdfFile(file);
+      }
+    }
     
     // Simular upload com progress
     setIsUploading(true);
@@ -241,7 +287,7 @@ function Publicar() {
                   ref={fileInputRef}
                   type="file"
                   onChange={handleFileChange}
-                  accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
+                  accept={formData.category === 'literatura' ? '.txt,.pdf,.doc,.docx' : 'image/*,video/*,audio/*,.pdf,.doc,.docx'}
                   style={{ display: 'none' }}
                 />
 
@@ -269,12 +315,25 @@ function Publicar() {
                         <div 
                           key={genre}
                           className={`genre-card ${formData.genre === genre ? 'selected' : ''}`}
-                          onClick={() => setFormData(prev => ({ ...prev, genre }))}
+                          onClick={() => {
+                            setFormData(prev => ({ ...prev, genre }));
+                            if (genre !== 'Outros') setCustomGenre('');
+                          }}
                         >
                           {genre}
                         </div>
                       ))}
                     </div>
+                    {formData.genre === 'Outros' && (
+                      <div className="custom-genre-input">
+                        <input
+                          type="text"
+                          placeholder="Digite o gênero personalizado"
+                          value={customGenre}
+                          onChange={(e) => setCustomGenre(e.target.value)}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -311,6 +370,20 @@ function Publicar() {
                   />
                   <div className="char-count">{formData.description.length}/500</div>
                 </div>
+
+                {formData.category === 'literatura' && documentText && (
+                  <div className="form-group">
+                    <label>📖 Conteúdo Extraído</label>
+                    <textarea
+                      value={documentText}
+                      onChange={(e) => setDocumentText(e.target.value)}
+                      placeholder="Conteúdo do documento será exibido aqui..."
+                      rows="10"
+                      className="document-text"
+                    />
+                    <div className="char-count">{documentText.length} caracteres</div>
+                  </div>
+                )}
 
                 <div className="form-group">
                   <label>🏷️ Tags</label>
@@ -483,7 +556,12 @@ function Publicar() {
                   type="button" 
                   onClick={nextStep} 
                   className="btn-primary"
-                  disabled={activeStep === 1 && (!formData.file || !formData.category)}
+                  disabled={activeStep === 1 && (
+                    !formData.category || 
+                    (formData.category !== 'literatura' && !formData.file) ||
+                    (formData.category === 'literatura' && !formData.genre) ||
+                    (formData.genre === 'Outros' && !customGenre.trim())
+                  )}
                 >
                   Próximo →
                 </button>
