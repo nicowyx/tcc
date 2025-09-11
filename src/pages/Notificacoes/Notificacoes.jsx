@@ -128,7 +128,7 @@ function Notificacoes() {
   };
 
   return (
-    <div className="home-layout">
+    <div className="notificacoes-layout">
       <Sidebar />
       <main className="main-content">
         <div className="notifications-header-main">

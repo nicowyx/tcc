@@ -1,3 +1,9 @@
+.perfil-layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #23272f 60%, #7c3aed 100%);
+}
+
 .profile-container {
   max-width: 1000px;
   margin: 0 auto;

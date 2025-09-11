@@ -5,7 +5,7 @@ import './Home.css';
 
 function Home() {
   return (
-    <div className="home-layout">
+    <div className={`home-layout ${document.body.className}`}>
       <Sidebar />
       <main className="main-content">
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>

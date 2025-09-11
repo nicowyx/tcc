@@ -100,7 +100,7 @@ function Comunidade() {
   };
 
   return (
-    <div className="home-layout">
+    <div className="comunidade-layout">
       <Sidebar />
       <main className="main-content">
         <div className="community-header">

@@ -38,7 +38,7 @@ function Perfil() {
   ];
 
   return (
-    <div className="home-layout">
+    <div className="perfil-layout">
       <Sidebar />
       <main className="main-content">
         <div className="profile-container">

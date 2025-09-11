@@ -77,6 +77,11 @@
   color: #fff !important;
 }
 
+.sidebar-nav a[href="/literatura"]:hover {
+  background: #059669 !important;
+  color: #fff !important;
+}
+
 .sidebar-nav a[href="/explorar"]:hover {
   background: #7c3aed !important;
   color: #fff !important;
@@ -114,5 +119,47 @@
   align-items: center;
 }
 .sidebar-footer a:hover, .sidebar-footer a:focus {
+  color: #00ff66;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle:hover {
+  color: #00ff66;
+}
+
+.light-theme .sidebar {
+  background: #f8f9fa;
+  color: #333;
+  border-right: 2px solid #e9ecef;
+}
+
+.light-theme .sidebar .sidebar-logo a {
+  color: #333;
+}
+
+.light-theme .sidebar .sidebar-nav a {
+  color: #333;
+}
+
+.light-theme .sidebar .sidebar-nav a:hover {
+  background: #00ff66 !important;
+  color: #333 !important;
+}
+
+.light-theme .sidebar .sidebar-footer a {
+  color: #333;
+}
+
+.light-theme .sidebar .sidebar-footer a:hover {
   color: #00ff66;
 }

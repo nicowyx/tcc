@@ -156,7 +156,7 @@ function Publicar() {
   };
 
   return (
-    <div className="home-layout">
+    <div className="publicar-layout">
       <Sidebar />
       <main className="main-content">
         <div className="publish-header">

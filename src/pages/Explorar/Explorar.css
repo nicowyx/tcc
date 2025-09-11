@@ -1,7 +1,7 @@
 .explorar-layout {
   display: flex;
   min-height: 100vh;
-  background: #7c3aed;
+  background: linear-gradient(180deg, #23272f 60%, #7c3aed 100%);
 }
 
 .main-content {

@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import { useTheme } from '../../contexts/ThemeContext';
 import './Configuracoes.css';
 
 function Configuracoes() {
+  const { isDarkMode, toggleTheme } = useTheme();
+  
   const [settings, setSettings] = useState({
     notifications: true,
     emailNotifications: false,
     pushNotifications: true,
-    darkMode: true,
     autoPlay: true,
     highQuality: true,
     language: 'pt',
@@ -25,7 +27,7 @@ function Configuracoes() {
   };
 
   return (
-    <div className="home-layout">
+    <div className="configuracoes-layout">
       <Sidebar />
       <main className="main-content">
         <div className="settings-header">
@@ -82,7 +84,7 @@ function Configuracoes() {
                 <small>Interface com cores escuras</small>
               </div>
               <label className="toggle">
-                <input type="checkbox" checked={settings.darkMode} onChange={() => handleToggle('darkMode')} />
+                <input type="checkbox" checked={isDarkMode} onChange={toggleTheme} />
                 <span className="slider"></span>
               </label>
             </div>
