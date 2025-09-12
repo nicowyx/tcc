@@ -12,7 +12,7 @@ function Literatura() {
   const literaturaSections = {
     'Poesia & Crônicas': {
       title: "Poesia & Crônicas",
-      color: "linear-gradient(0deg, #059669 0%, #10b981 100%)",
+      color: "linear-gradient(0deg, #f59e0b 0%, #fbbf24 100%)",
       artworks: [
         { title: 'Sonetos do Amor', artist: 'Ana Poética', cover: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=400&q=80' },
         { title: 'Crônicas Urbanas', artist: 'João Cronista', cover: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80' },
@@ -25,7 +25,7 @@ function Literatura() {
     },
     'Contos & Novelas': {
       title: "Contos & Novelas",
-      color: "linear-gradient(90deg, #059669 0%, #10b981 100%)",
+      color: "linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%)",
       artworks: [
         { title: 'Contos da Madrugada', artist: 'Bruno Narrativa', cover: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80' },
         { title: 'Novela Urbana', artist: 'Camila Ficção', cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80' },
@@ -38,7 +38,7 @@ function Literatura() {
     },
     'Ensaios & Artigos': {
       title: "Ensaios & Artigos",
-      color: "linear-gradient(0deg, #10b981 0%, #34d399 100%)",
+      color: "linear-gradient(0deg, #fbbf24 0%, #fcd34d 100%)",
       artworks: [
         { title: 'Ensaios Filosóficos', artist: 'Lucas Filosofia', cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80' },
         { title: 'Artigos Culturais', artist: 'Amanda Cultura', cover: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=400&q=80' },
@@ -70,9 +70,9 @@ function Literatura() {
           categories={categories} 
           onCategoryChange={setSelectedCategory}
           categoryColors={{
-            'Poesia & Crônicas': '#059669',
-            'Contos & Novelas': '#059669',
-            'Ensaios & Artigos': '#059669'
+            'Poesia & Crônicas': '#fbbf24',
+            'Contos & Novelas': '#fbbf24',
+            'Ensaios & Artigos': '#fbbf24'
           }}
         />
 

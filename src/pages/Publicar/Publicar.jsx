@@ -287,7 +287,7 @@ function Publicar() {
                   ref={fileInputRef}
                   type="file"
                   onChange={handleFileChange}
-                  accept={formData.category === 'literatura' ? '.txt,.pdf,.doc,.docx' : 'image/*,video/*,audio/*,.pdf,.doc,.docx'}
+                  accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
                   style={{ display: 'none' }}
                 />
 
@@ -558,8 +558,8 @@ function Publicar() {
                   className="btn-primary"
                   disabled={activeStep === 1 && (
                     !formData.category || 
-                    (formData.category !== 'literatura' && !formData.file) ||
-                    (formData.category === 'literatura' && !formData.genre) ||
+                    !formData.file ||
+                    !formData.genre ||
                     (formData.genre === 'Outros' && !customGenre.trim())
                   )}
                 >
