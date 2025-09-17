@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import apiService from '../../services/api';
 import './Publicar.css';
 
 function Publicar() {
@@ -173,15 +174,28 @@ function Publicar() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsUploading(true);
     
-    // Simular publicação
-    setTimeout(() => {
-      setIsUploading(false);
+    try {
+      const postData = {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        tags: formData.tags,
+        visibility: formData.visibility,
+        allowComments: formData.allowComments,
+        allowDownloads: formData.allowDownloads,
+        monetization: formData.monetization,
+        price: formData.price,
+        location: formData.location,
+        image: preview
+      };
+      
+      await apiService.createPost(postData);
+      
       alert('🎉 Conteúdo publicado com sucesso!');
-      // Reset form
       setFormData({
         title: '', description: '', category: '', genre: '', tags: [], file: null,
         thumbnail: null, visibility: 'public', allowComments: true,
@@ -190,7 +204,11 @@ function Publicar() {
       });
       setPreview(null);
       setActiveStep(1);
-    }, 2000);
+    } catch (error) {
+      alert('❌ Erro ao publicar: ' + error.message);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const nextStep = () => {

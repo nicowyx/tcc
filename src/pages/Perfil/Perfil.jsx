@@ -1,34 +1,172 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import apiService from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 import './Perfil.css';
 
 function Perfil() {
   const [activeTab, setActiveTab] = useState('posts');
   const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    name: 'João Silva',
-    username: 'joaosilva',
-    bio: 'Artista digital e músico apaixonado por criar experiências únicas através da arte',
-    location: 'São Paulo, Brasil',
-    website: 'www.joaosilva.art',
-    joinDate: 'Março 2023'
-  });
+  const [userInfo, setUserInfo] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+  const [userActivities, setUserActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const stats = {
-    posts: 42,
-    followers: 1247,
-    following: 234,
-    likes: 5832
+  useEffect(() => {
+    if (!apiService.isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+    loadUserData();
+  }, [navigate]);
+
+  const loadUserData = async () => {
+    try {
+      const user = apiService.getCurrentUser();
+      
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+      
+      // Carregar dados salvos do perfil apenas se existirem
+      const savedProfile = localStorage.getItem('userProfile');
+      const profileData = savedProfile ? JSON.parse(savedProfile) : {};
+      
+      // Verificar se é um perfil já personalizado ou se deve usar dados padrão
+      const hasCustomProfile = savedProfile && (profileData.name || profileData.bio || profileData.avatar);
+      
+      setUserInfo({
+        name: hasCustomProfile ? profileData.name : user.name || '',
+        email: user.email || '',
+        username: user.email ? user.email.split('@')[0] : 'usuario',
+        bio: hasCustomProfile ? profileData.bio : '',
+        location: hasCustomProfile ? profileData.location : '',
+        avatar: hasCustomProfile ? profileData.avatar : null,
+        joinDate: new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+      });
+      
+      // Tentar carregar posts, mas não falhar se der erro
+      try {
+        const posts = await apiService.getUserPosts();
+        setUserPosts(posts || []);
+      } catch (postError) {
+        console.log('Erro ao carregar posts:', postError);
+        setUserPosts([]);
+      }
+      
+      // Carregar atividades do usuário
+      await loadUserActivities();
+      
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+      // Usar dados padrão limpos se falhar
+      setUserInfo({
+        name: '',
+        email: '',
+        username: 'usuario',
+        bio: '',
+        location: '',
+        avatar: null,
+        joinDate: new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+      });
+      setUserPosts([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const posts = [
-    { id: 1, type: 'music', title: 'Sigilo - Nova Faixa', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=300&q=80', likes: 156, comments: 23 },
-    { id: 2, type: 'art', title: 'Arte Digital Abstrata', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80', likes: 89, comments: 12 },
-    { id: 3, type: 'photo', title: 'Paisagem Urbana', image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=300&q=80', likes: 234, comments: 45 },
-    { id: 4, type: 'music', title: 'Beat Experimental', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=300&q=80', likes: 67, comments: 8 },
-    { id: 5, type: 'art', title: 'Ilustração Digital', image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=300&q=80', likes: 198, comments: 31 },
-    { id: 6, type: 'photo', title: 'Retrato Artístico', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80', likes: 145, comments: 19 }
-  ];
+  const loadUserActivities = async () => {
+    try {
+      if (apiService.isAuthenticated()) {
+        // Tentar carregar atividades reais da API
+        const activities = await apiService.getUserActivities();
+        const formattedActivities = activities.map(activity => ({
+          ...activity,
+          date: new Date(activity.date)
+        }));
+        setUserActivities(formattedActivities);
+      } else {
+        // Usar atividades simuladas se não estiver logado
+        const activities = [
+          {
+            id: 1,
+            type: 'like',
+            action: 'curtiu',
+            target: 'Sunset Photography',
+            targetType: 'post',
+            author: 'Maria Silva',
+            date: new Date(Date.now() - 2 * 60 * 60 * 1000),
+            icon: '❤️'
+          },
+          {
+            id: 2,
+            type: 'follow',
+            action: 'começou a seguir',
+            target: 'João Santos',
+            targetType: 'user',
+            date: new Date(Date.now() - 5 * 60 * 60 * 1000),
+            icon: '👥'
+          }
+        ];
+        setUserActivities(activities);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar atividades:', error);
+      // Usar atividades vazias em caso de erro
+      setUserActivities([]);
+    }
+  };
+
+  const formatTimeAgo = (date) => {
+    const now = new Date();
+    const diffInMs = now - date;
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInHours / 24);
+    
+    if (diffInHours < 1) {
+      return 'Agora há pouco';
+    } else if (diffInHours < 24) {
+      return `${diffInHours}h atrás`;
+    } else if (diffInDays === 1) {
+      return 'Ontem';
+    } else if (diffInDays < 7) {
+      return `${diffInDays} dias atrás`;
+    } else {
+      return date.toLocaleDateString('pt-BR');
+    }
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUserInfo({...userInfo, avatar: e.target.result});
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const saveProfile = () => {
+    // Salvar no localStorage por enquanto
+    localStorage.setItem('userProfile', JSON.stringify({
+      name: userInfo.name,
+      bio: userInfo.bio,
+      location: userInfo.location,
+      avatar: userInfo.avatar
+    }));
+    setIsEditing(false);
+    alert('Perfil atualizado com sucesso!');
+  };
+
+  const stats = {
+    posts: userPosts.length,
+    followers: 0,
+    following: 0,
+    likes: 0
+  };
 
   const achievements = [
     { icon: '🏆', title: 'Artista Destaque', description: 'Mais de 1000 curtidas em uma publicação' },
@@ -37,33 +175,104 @@ function Perfil() {
     { icon: '👥', title: 'Influenciador', description: 'Mais de 1000 seguidores' }
   ];
 
+  if (loading) {
+    return (
+      <div className="home-layout">
+        <Sidebar />
+        <main className="main-content">
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <h2>Carregando perfil...</h2>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (!userInfo) {
+    return (
+      <div className="home-layout">
+        <Sidebar />
+        <main className="main-content">
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <h2>Erro ao carregar perfil</h2>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
-    <div className="perfil-layout">
+    <div className="home-layout">
       <Sidebar />
       <main className="main-content">
         <div className="profile-container">
           <div className="profile-header">
             <div className="profile-cover">
-              <div className="profile-avatar">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&crop=face" alt="Perfil" />
+              <div className="profile-avatar" onClick={() => isEditing && document.getElementById('avatar-input').click()}>
+                <img src={userInfo.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&crop=face"} alt="Perfil" />
                 <div className="avatar-badge">✓</div>
+                {isEditing && (
+                  <div className="avatar-edit-overlay">
+                    <span>📷</span>
+                  </div>
+                )}
+                <input 
+                  id="avatar-input"
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleAvatarChange}
+                  style={{display: 'none'}}
+                />
               </div>
             </div>
             <div className="profile-info">
               <div className="profile-main">
-                <h1>{userInfo.name}</h1>
-                <p className="username">@{userInfo.username}</p>
-                <p className="bio">{userInfo.bio}</p>
-                <div className="profile-meta">
-                  <span>📍 {userInfo.location}</span>
-                  <span>🌐 {userInfo.website}</span>
-                  <span>📅 Entrou em {userInfo.joinDate}</span>
-                </div>
+                {isEditing ? (
+                  <div className="edit-form">
+                    <input 
+                      type="text" 
+                      value={userInfo.name} 
+                      onChange={(e) => setUserInfo({...userInfo, name: e.target.value})}
+                      placeholder="Nome"
+                      style={{fontSize: '24px', fontWeight: 'bold', marginBottom: '10px', padding: '5px', border: '1px solid #ccc', borderRadius: '5px'}}
+                    />
+                    <textarea 
+                      value={userInfo.bio} 
+                      onChange={(e) => setUserInfo({...userInfo, bio: e.target.value})}
+                      placeholder="Bio"
+                      rows="3"
+                      style={{width: '100%', marginBottom: '10px', padding: '5px', border: '1px solid #ccc', borderRadius: '5px'}}
+                    />
+                    <input 
+                      type="text" 
+                      value={userInfo.location} 
+                      onChange={(e) => setUserInfo({...userInfo, location: e.target.value})}
+                      placeholder="Localização"
+                      style={{marginBottom: '10px', padding: '5px', border: '1px solid #ccc', borderRadius: '5px'}}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <h1>{userInfo.name}</h1>
+                    <p className="username">@{userInfo.username}</p>
+                    <p className="bio">{userInfo.bio}</p>
+                    <div className="profile-meta">
+                      <span>📧 {userInfo.email}</span>
+                      <span>📍 {userInfo.location}</span>
+                      <span>📅 Entrou em {userInfo.joinDate}</span>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="profile-actions">
-                <button className="edit-btn" onClick={() => setIsEditing(!isEditing)}>
+                <button className="edit-btn" onClick={() => isEditing ? saveProfile() : setIsEditing(true)}>
                   {isEditing ? '💾 Salvar' : '✏️ Editar Perfil'}
                 </button>
+                {isEditing && (
+                  <button className="cancel-btn" onClick={() => setIsEditing(false)}>
+                    ❌ Cancelar
+                  </button>
+                )}
                 <button className="share-btn">🔗 Compartilhar</button>
               </div>
             </div>
@@ -93,13 +302,19 @@ function Perfil() {
               className={`tab ${activeTab === 'posts' ? 'active' : ''}`}
               onClick={() => setActiveTab('posts')}
             >
-              📝 Publicações
+              📝 Publicações ({userPosts.length})
             </button>
             <button 
               className={`tab ${activeTab === 'achievements' ? 'active' : ''}`}
               onClick={() => setActiveTab('achievements')}
             >
               🏆 Conquistas
+            </button>
+            <button 
+              className={`tab ${activeTab === 'activities' ? 'active' : ''}`}
+              onClick={() => setActiveTab('activities')}
+            >
+              📊 Atividades ({userActivities.length})
             </button>
             <button 
               className={`tab ${activeTab === 'about' ? 'active' : ''}`}
@@ -112,27 +327,32 @@ function Perfil() {
           <div className="profile-content">
             {activeTab === 'posts' && (
               <div className="content-grid">
-                {posts.map(post => (
-                  <div key={post.id} className="content-item">
-                    <div className="content-image">
-                      <img src={post.image} alt={post.title} />
-                      <div className="content-overlay">
-                        <div className="content-stats">
-                          <span>❤️ {post.likes}</span>
-                          <span>💬 {post.comments}</span>
+                {userPosts.length > 0 ? (
+                  userPosts.map(post => (
+                    <div key={post.id} className="content-item">
+                      <div className="content-info">
+                        <div className="content-type">
+                          {post.category === 'musicas' && '🎵'}
+                          {post.category === 'artes-digitais' && '🎨'}
+                          {post.category === 'fotografias' && '📸'}
+                          {post.category === 'filmes' && '🎬'}
+                          {post.category === 'obras' && '🖼️'}
+                        </div>
+                        <h4>{post.title}</h4>
+                        <p>{post.description}</p>
+                        <div className="post-meta">
+                          <span>📅 {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
+                          <span>👁️ {post.visibility}</span>
                         </div>
                       </div>
                     </div>
-                    <div className="content-info">
-                      <div className="content-type">
-                        {post.type === 'music' && '🎵'}
-                        {post.type === 'art' && '🎨'}
-                        {post.type === 'photo' && '📸'}
-                      </div>
-                      <h4>{post.title}</h4>
-                    </div>
+                  ))
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '50px', gridColumn: '1 / -1' }}>
+                    <h3>Nenhuma publicação ainda</h3>
+                    <p>Comece criando seu primeiro post!</p>
                   </div>
-                ))}
+                )}
               </div>
             )}
 
@@ -148,6 +368,80 @@ function Perfil() {
               </div>
             )}
 
+            {activeTab === 'activities' && (
+              <div className="activities-section">
+                <div className="activities-header">
+                  <h3>📊 Suas Atividades Recentes</h3>
+                  <p>Acompanhe suas curtidas, seguidores e interações</p>
+                </div>
+                
+                <div className="activities-stats">
+                  <div className="activity-stat">
+                    <div className="stat-icon">❤️</div>
+                    <div className="stat-info">
+                      <h4>{userActivities.filter(a => a.type === 'like').length}</h4>
+                      <span>Curtidas dadas</span>
+                    </div>
+                  </div>
+                  <div className="activity-stat">
+                    <div className="stat-icon">👥</div>
+                    <div className="stat-info">
+                      <h4>{userActivities.filter(a => a.type === 'follow').length}</h4>
+                      <span>Pessoas seguidas</span>
+                    </div>
+                  </div>
+                  <div className="activity-stat">
+                    <div className="stat-icon">📈</div>
+                    <div className="stat-info">
+                      <h4>{userActivities.length}</h4>
+                      <span>Atividades totais</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="activities-timeline">
+                  {userActivities.length > 0 ? (
+                    userActivities.map(activity => (
+                      <div key={activity.id} className="activity-item">
+                        <div className="activity-icon">{activity.icon}</div>
+                        <div className="activity-content">
+                          <div className="activity-main">
+                            <span className="activity-text">
+                              Você <strong>{activity.action}</strong> 
+                              {activity.targetType === 'post' ? (
+                                <>
+                                  <span className="activity-target"> "{activity.target}"</span>
+                                  {activity.author && <span className="activity-author"> de {activity.author}</span>}
+                                </>
+                              ) : (
+                                <span className="activity-target"> {activity.target}</span>
+                              )}
+                            </span>
+                          </div>
+                          <div className="activity-time">
+                            {formatTimeAgo(new Date(activity.date))}
+                          </div>
+                        </div>
+                        <div className="activity-actions">
+                          {activity.targetType === 'post' && (
+                            <button className="activity-btn">👁️ Ver post</button>
+                          )}
+                          {activity.targetType === 'user' && (
+                            <button className="activity-btn">👤 Ver perfil</button>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-activities">
+                      <h4>Nenhuma atividade ainda</h4>
+                      <p>Comece curtindo posts e seguindo outros usuários!</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {activeTab === 'about' && (
               <div className="about-section">
                 <div className="about-card">
@@ -155,15 +449,15 @@ function Perfil() {
                   <div className="stats-detailed">
                     <div className="stat-item">
                       <span className="stat-label">Total de visualizações</span>
-                      <span className="stat-value">25.4K</span>
+                      <span className="stat-value">0</span>
                     </div>
                     <div className="stat-item">
                       <span className="stat-label">Média de curtidas</span>
-                      <span className="stat-value">139</span>
+                      <span className="stat-value">0</span>
                     </div>
                     <div className="stat-item">
                       <span className="stat-label">Engajamento</span>
-                      <span className="stat-value">8.2%</span>
+                      <span className="stat-value">0%</span>
                     </div>
                   </div>
                 </div>

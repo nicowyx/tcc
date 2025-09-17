@@ -1,13 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TrendingSection from '../../components/TrendingSection/TrendingSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
-import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
+import apiService from '../../services/api';
 import './Obras.css';
 
 function Obras() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const categories = ['Pinturas Clássicas', 'Arte Contemporânea', 'Esculturas & Instalações'];
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  const loadPosts = async () => {
+    try {
+      const data = await apiService.getPosts();
+      const obraPosts = data.filter(post => post.category === 'obras');
+      setPosts(obraPosts);
+    } catch (error) {
+      console.error('Erro ao carregar posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getFilteredPosts = () => {
+    if (!searchTerm) return posts;
+    return posts.filter(post => 
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const postsToArtworks = (posts) => {
+    return posts.map(post => ({
+      title: post.title,
+      artist: post.author,
+      cover: post.image_url
+    }));
+  };
+
+  if (loading) {
+    return (
+      <div className="obras-layout">
+        <Sidebar />
+        <main className="main-content">
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+            <p>Carregando obras...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   const obraSections = {
     'Pinturas Clássicas': {
@@ -63,27 +109,21 @@ function Obras() {
       <Sidebar />
       <main className="main-content">
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
-          <SearchBar />
+          <SearchBar onSearch={setSearchTerm} placeholder="Buscar obras..." />
         </div>
         <h2 className="obras-title">Obras Diversas</h2>
-        <CategoryFilter 
-          categories={categories} 
-          onCategoryChange={setSelectedCategory}
-          categoryColors={{
-            'Pinturas Clássicas': '#f97316',
-            'Arte Contemporânea': '#f97316',
-            'Esculturas & Instalações': '#f97316'
-          }}
-        />
-
-        {getSectionsToShow().map((section, index) => (
+        
+        {posts.length > 0 ? (
           <TrendingSection
-            key={index}
-            title={section.title}
-            color={section.color}
-            artworks={section.artworks}
+            title="Obras Publicadas"
+            color="linear-gradient(0deg, #f97316 0%, #ea580c 100%)"
+            artworks={postsToArtworks(getFilteredPosts())}
           />
-        ))}
+        ) : (
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <p>Nenhuma obra encontrada. Seja o primeiro a publicar!</p>
+          </div>
+        )}
       </main>
     </div>
   );

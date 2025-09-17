@@ -1,13 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TrendingSection from '../../components/TrendingSection/TrendingSection';
 import SearchBar from '../../components/SearchBar/SearchBar';
-import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
+import apiService from '../../services/api';
 import './Fotografias.css';
 
 function Fotografias() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const categories = ['Paisagens & Natureza', 'Retratos & Pessoas', 'Arquitetura & Urbano'];
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  const loadPosts = async () => {
+    try {
+      const data = await apiService.getPosts();
+      const fotoPosts = data.filter(post => post.category === 'fotografias');
+      setPosts(fotoPosts);
+    } catch (error) {
+      console.error('Erro ao carregar posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getFilteredPosts = () => {
+    if (!searchTerm) return posts;
+    return posts.filter(post => 
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const postsToArtworks = (posts) => {
+    return posts.map(post => ({
+      title: post.title,
+      artist: post.author,
+      cover: post.image_url
+    }));
+  };
+
+  if (loading) {
+    return (
+      <div className="fotografias-layout">
+        <Sidebar />
+        <main className="main-content">
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+            <p>Carregando fotografias...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   const fotografiaSections = {
     'Paisagens & Natureza': {
@@ -63,27 +109,21 @@ function Fotografias() {
       <Sidebar />
       <main className="main-content">
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 24 }}>
-          <SearchBar />
+          <SearchBar onSearch={setSearchTerm} placeholder="Buscar fotografias..." />
         </div>
         <h2 className="fotografias-title">Fotografias Diversas</h2>
-        <CategoryFilter 
-          categories={categories} 
-          onCategoryChange={setSelectedCategory}
-          categoryColors={{
-            'Paisagens & Natureza': '#1d4ed8',
-            'Retratos & Pessoas': '#1d4ed8',
-            'Arquitetura & Urbano': '#1d4ed8'
-          }}
-        />
-
-        {getSectionsToShow().map((section, index) => (
+        
+        {posts.length > 0 ? (
           <TrendingSection
-            key={index}
-            title={section.title}
-            color={section.color}
-            artworks={section.artworks}
+            title="Fotografias Publicadas"
+            color="linear-gradient(0deg, #1d4ed8 0%, #2563eb 100%)"
+            artworks={postsToArtworks(getFilteredPosts())}
           />
-        ))}
+        ) : (
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <p>Nenhuma fotografia encontrada. Seja o primeiro a publicar!</p>
+          </div>
+        )}
       </main>
     </div>
   );

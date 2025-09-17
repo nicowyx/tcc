@@ -1,12 +1,84 @@
-# React + Vite
+# TCC - Sistema de Publicação de Conteúdo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema completo para publicação e compartilhamento de conteúdo criativo com React + Vite no frontend e Flask + SQLite no backend.
 
-Currently, two official plugins are available:
+## Estrutura do Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend**: React + Vite
+- **Backend**: Flask + SQLAlchemy + SQLite
+- **Banco de Dados**: SQLite com modelos completos
 
-## Expanding the ESLint configuration
+## Configuração e Execução
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Opção 1: Script Automático
+Execute `iniciar_sistema.bat` e escolha a opção desejada.
+
+### Opção 2: Manual
+
+#### Backend
+1. Instale Python e pip
+2. Navegue para a pasta backend:
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   python app.py
+   ```
+
+#### Frontend
+1. Instale Node.js e npm
+2. Na raiz do projeto:
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+## Banco de Dados
+
+O sistema utiliza SQLite com os seguintes modelos:
+- **User**: Usuários do sistema
+- **Post**: Publicações de conteúdo
+- **Like**: Curtidas nas publicações
+- **Follow**: Relacionamentos entre usuários
+- **Notification**: Sistema de notificações
+
+### Resetar Banco de Dados
+
+```bash
+cd backend
+# Com dados de teste
+python reset_with_test_data.py
+
+# Banco limpo
+python reset_clean_db.py
+```
+
+### Usuários de Teste
+- admin@test.com / 123456
+- maria@test.com / 123456
+- joao@test.com / 123456
+- ana@test.com / 123456
+
+## Funcionalidades
+
+- ✅ Sistema de autenticação completo
+- ✅ Publicação de conteúdo por categorias
+- ✅ Sistema de curtidas e seguidores
+- ✅ Notificações em tempo real
+- ✅ Upload de imagens
+- ✅ Perfil de usuário personalizado
+- ✅ Feed de atividades
+
+## Tecnologias
+
+### Frontend
+- React 18
+- Vite
+- React Router DOM
+- React Icons
+
+### Backend
+- Flask
+- SQLAlchemy
+- Flask-JWT-Extended
+- Flask-CORS
+- Flask-Bcrypt
